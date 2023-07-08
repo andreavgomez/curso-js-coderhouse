@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+.select-espaciado {
+    margin-left: 10px;
+}
+  
+.navbar-nav {
+    margin-left: auto;
+}
+  
+.navbar-brand {
+    margin-right: auto;
+} 
+  
+#selectOrden {
+    margin-left: 10px; /* Ajusta el valor según tu preferencia */
+  }
+  
+.body{
+    background-color: rgb(145, 145, 145);
+}
+
+.ofertaLibro{
+    color:red;
+    font-weight: bold;
+}
