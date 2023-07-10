@@ -82,6 +82,21 @@ function mostrarCatalogo(array){
 
 }
 
+// function agregarAlCarrito(Producto){
+//    //preguntar si existe ese Producto en el array
+//    let ProductoAgregado = productosEnCarrito.find((elem)=>elem.id == Producto.id) 
+//    //me devuelve sino encuentra undefined, si encuenta el elemento
+//    if(ProductoAgregado == undefined){
+//       //código para sumar al array carrito
+//       productosEnCarrito.push(Producto)
+//       localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
+//       console.log(productosEnCarrito)
+//    }else{
+//       //sumar uno a cantidad
+//       console.log(`El Producto ${Producto.nombre} ya existe en el carrito `)
+//    }
+// }
+
 function agregarAlCarrito(Producto){
    //preguntar si existe ese Producto en el array
    let ProductoAgregado = productosEnCarrito.find((elem)=>elem.id == Producto.id) 
@@ -90,39 +105,139 @@ function agregarAlCarrito(Producto){
       //código para sumar al array carrito
       productosEnCarrito.push(Producto)
       localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
-      console.log(productosEnCarrito)
+      console.log(`El Producto ${productosEnCarrito} se agregado con exito `)
+      alert(`El Producto, se agregado con exito `)
    }else{
       //sumar uno a cantidad
       console.log(`El Producto ${Producto.nombre} ya existe en el carrito `)
+      alert(`El Producto, ya existe en el carrito `)
    }
 }
 
 function cargarProductosCarrito(array){
    modalBodyCarrito.innerHTML = ``
+   //primer for each imprime las card
    array.forEach((productoCarrito)=>{
+      // modalBodyCarrito.innerHTML += `
+      // <div class="card border-primary mb-3" id ="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
+      //          <img class="card-img-top" height="300px" src="assets/${productoCarrito.imagen}" alt="">
+      //          <div class="card-body">
+      //                 <h4 class="card-title">${productoCarrito.nombre}</h4>
+                  
+      //                  <p class="card-text">Precio: $${productoCarrito.precio}</p>
+      //                  <p class="card-text">Cantidad: ${productoCarrito.cantidad}</p> 
+      //                  <p class="card-text">Sub-Total: ${productoCarrito.cantidad * productoCarrito.precio}</p>   
+      //                  <button class= "btn btn-success" id="botonSumarUnidad${productoCarrito.id}"><i class=""></i>+1</button>
+      //                 <button class= "btn btn-danger" id="botonEliminarUnidad${productoCarrito.id}"><i class=""></i>-1</button> 
+      //                  <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
+      //          </div>    
+      //     </div>
+      // `
       modalBodyCarrito.innerHTML += `
-   
-        <div class="card border-primary mb-3" id ="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
-                 <img class="card-img-top" height="300px" src="assets/${productoCarrito.imagen}" alt="">
-                 <div class="card-body">
-                        <h4 class="card-title">${productoCarrito.nombre}</h4>
-                         <p class="card-text">${productoCarrito.descripcion}</p>
-                         <p class="card-text">$${productoCarrito.precio}</p> 
-                         <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
-                 </div>    
-            </div>
-      
-   `
+      <table class="table">
+        <tr>
+          <td>Imagen</td>
+          <td>Producto</td>
+          <td>Precio</td>
+          <td>Cantidad</td>
+          <td>SubTotal</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>   
+          <td>
+            <img class="card-img-top" style="max-width: 120px;" src="assets/${productoCarrito.imagen}" alt="">
+          </td>
+          <td>${productoCarrito.nombre}</td>
+          <td>${productoCarrito.precio}</td>
+          <td>${productoCarrito.cantidad}</td>
+          <td>${productoCarrito.cantidad * productoCarrito.precio}</td>
+          <td><button class="btn btn-success" id="botonSumarUnidad${productoCarrito.id}"><i class=""></i>+</button></td>
+          <td><button class="btn btn-danger" id="botonEliminarUnidad${productoCarrito.id}"><i class=""></i>-</button></td>
+          <td><button class="btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button></td>         
+        </tr>
+      </table>
+    `     
+   })
+   //segundo for each adjunta EVENTOS eliminar
+   array.forEach((productoCarrito) => {
+      //EVENTO PARA SUMAR UNA UNIDAD
+      document.getElementById(`botonSumarUnidad${productoCarrito.id}`).addEventListener("click", () =>{
+         console.log(`Se ha sumado una unidad`)
+         //utilizo método creado en la class constructora
+         productoCarrito.sumarUnidad()
+         console.log(productoCarrito.cantidad)
+         //setear el storage
+         localStorage.setItem("carrito", JSON.stringify(array))
+         //para actualizar el DOM re imprimimos todo
+         cargarProductosCarrito(array)
+      })
+      //EVENTO PARA RESTAR UNA UNIDAD
+      document.getElementById(`botonEliminarUnidad${productoCarrito.id}`).addEventListener("click", ()=>{         
+         let cantProd = productoCarrito.restarUnidad()
+         console.log(cantProd)
+         if(cantProd < 1){
+            //borrar del DOM
+            let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`)
+            cardProducto.remove()
+            //borrar del array
+            //encontramos objeto a eliminar
+            let productoEliminar = array.find((producto) => producto.id == productoCarrito.id)
+            console.log(productoEliminar)
+            //buscar indice
+            let posicion = array.indexOf(productoEliminar)
+            console.log(posicion)
+            array.splice(posicion,1)
+            console.log(array)
+            //setear storage
+            localStorage.setItem("carrito", JSON.stringify(array))
+            //
+            calcularTotal(array)
+            }
+            else{
+                localStorage.setItem("carrito", JSON.stringify(array))
+            }
+         
+         cargarProductosCarrito(array)
+      })
+
+      //EVENTO PARA ELIMINAR TODO EL PRODUCTO
+      //manipular el DOM sin guardar en variable
+      document.getElementById(`botonEliminar${productoCarrito.id}`).addEventListener("click", () => {
+         console.log(`Eliminar producto`)
+         console.log( document.getElementById('botonEliminar'))
+         //borrar del DOM
+         let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`)
+         cardProducto.remove()
+         //borrar del array
+         //encontramos objeto a eliminar
+         let productoEliminar = array.find((producto) => producto.id == productoCarrito.id)
+         console.log(productoEliminar)
+         //buscar indice
+         let posicion = array.indexOf(productoEliminar)
+         console.log(posicion)
+         array.splice(posicion,1)
+         console.log(array)
+         //setear storage
+         localStorage.setItem("carrito", JSON.stringify(array))
+         //
+         calcularTotal(array)
+      })
    })
    calcularTotal(array)
    
 }
 
 function calcularTotal(array){
-   let total = array.reduce((acc, productoCarrito)=> acc + productoCarrito.precio , 0)
-   total == 0 ? precioTotal.innerHTML= `No hay productos en el carrito` : precioTotal.innerHTML = `El total es <strong>${total}</strong>`
+   //método reduce 
+   //DOS PARAMETROS: primero la function y segundo valor en el que quiero inicializar el acumulador
+   let total = array.reduce((acc, productoCarrito)=> acc + (productoCarrito.precio * productoCarrito.cantidad), 0)
+   
+   total == 0 ? precioTotal.innerHTML= `No hay productos en el carrito` : precioTotal.innerHTML = ` Total: <strong>${total}</strong>`
 
 }
+//////////////////////
 
 function ordenarMenorMayor(array){
    //Hace una copia del array original, para aplicar sort y no modificar Mercaderia

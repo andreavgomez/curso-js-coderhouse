@@ -5,9 +5,17 @@ class Producto{
        this.descripcion = descripcion,
        this.nombre = nombre,
        this.precio = precio,
-       this.imagen = imagen
- 
+       this.imagen = imagen,
+       this.cantidad = 1
     }
+    sumarUnidad(){
+        this.cantidad = this.cantidad + 1
+        return this.cantidad
+    }
+    restarUnidad(){
+        this.cantidad = this.cantidad - 1
+        return this.cantidad
+    }    
  }
  
  //Instanciación de objetos: 
