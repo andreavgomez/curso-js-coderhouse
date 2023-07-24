@@ -1,6 +1,6 @@
 //capturar DOM
 let ProductosDiv = document.getElementById("Productos")
-let selectOrden = document.getElementById("selectOrden")
+// let selectOrden = document.getElementById("selectOrden")
 let agregarProductoBtn = document.getElementById("guardarProductoBtn")
 let buscador = document.getElementById("buscador")
 let coincidencia = document.getElementById("coincidencia")
@@ -36,15 +36,26 @@ document.addEventListener("DOMContentLoaded", function() {
      }
    });
  
-   opcionCargaProducto.addEventListener("click", function() {
-     if (cargarProducto.style.display === "none") {
-       cargarProducto.style.display = "block";
-       opcionCargaProducto.textContent = "Ocultar Carga de Producto";
-     } else {
-       cargarProducto.style.display = "none";
-       opcionCargaProducto.textContent = "Cargar nuevo Producto";
-     }
-   });
+   // opcionCargaProducto.addEventListener("click", function() {
+   //   if (cargarProducto.style.display === "none") {
+   //     cargarProducto.style.display = "block";
+   //     opcionCargaProducto.textContent = "Ocultar Carga de Producto";
+   //   } else {
+   //     cargarProducto.style.display = "none";
+   //     opcionCargaProducto.textContent = "Cargar nuevo Producto";
+   //   }
+   // });
+
+   // Evento "Cargar nuevo producto"
+   opcionCargaProducto.addEventListener("click", function () {
+   if (cargarProducto.style.display === "none") {
+     cargarProducto.style.display = "block";
+     opcionCargaProducto.textContent = "Ocultar Carga de Producto";
+   } else {
+     cargarProducto.style.display = "none";
+     opcionCargaProducto.textContent = "Cargar nuevo Producto";
+   }
+ });
 
    mostrarCatalogo(mercaderia);
  });
@@ -74,6 +85,7 @@ function mostrarCatalogo(array){
 
       let agregarBtn = document.getElementById(`agregarBtn${Producto.id}`)
 
+      // Evento "Agregar al carrito"
       agregarBtn.addEventListener("click", () => {
          // console.log(`Se agrego el Producto ${Producto.nombre} al carrito`)
          agregarAlCarrito(Producto)
@@ -84,12 +96,18 @@ function mostrarCatalogo(array){
 
 // Función para agregar un producto al carrito
 function agregarAlCarrito(producto) {
-   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === Producto.id);
+   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === producto.id);
    if (ProductoAgregado === undefined) {
-     const productoNuevo = new Producto(producto);
+     const productoNuevo = new Producto(
+      producto.id,
+      producto.descripcion,
+      producto.nombre,
+      producto.precio,
+      producto.imagen
+     );
      productosEnCarrito.push(productoNuevo);
      localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-     console.log(`El Producto ${productoNuevo.nombre} se ha agregado con éxito.`);
+     console.log(`El Producto ${producto.nombre} se ha agregado con éxito.`);
      alert(`El Producto se ha agregado con éxito.`);
    } else {
      ProductoAgregado.sumarUnidad();
@@ -101,23 +119,7 @@ function agregarAlCarrito(producto) {
 
 function cargarProductosCarrito(array){
    modalBodyCarrito.innerHTML = ``
-   //primer for each imprime las card
    array.forEach((productoCarrito)=>{
-      // modalBodyCarrito.innerHTML += `
-      // <div class="card border-primary mb-3" id ="productoCarrito${productoCarrito.id}" style="max-width: 540px;">
-      //          <img class="card-img-top" height="300px" src="assets/${productoCarrito.imagen}" alt="">
-      //          <div class="card-body">
-      //                 <h4 class="card-title">${productoCarrito.nombre}</h4>
-                  
-      //                  <p class="card-text">Precio: $${productoCarrito.precio}</p>
-      //                  <p class="card-text">Cantidad: ${productoCarrito.cantidad}</p> 
-      //                  <p class="card-text">Sub-Total: ${productoCarrito.cantidad * productoCarrito.precio}</p>   
-      //                  <button class= "btn btn-success" id="botonSumarUnidad${productoCarrito.id}"><i class=""></i>+1</button>
-      //                 <button class= "btn btn-danger" id="botonEliminarUnidad${productoCarrito.id}"><i class=""></i>-1</button> 
-      //                  <button class= "btn btn-danger" id="botonEliminar${productoCarrito.id}"><i class="fas fa-trash-alt"></i></button>
-      //          </div>    
-      //     </div>
-      // `
       modalBodyCarrito.innerHTML += `
       <table class="table">
         <tr>
@@ -130,7 +132,7 @@ function cargarProductosCarrito(array){
           <td></td>
           <td></td>
         </tr>
-        <tr>   
+        <tr id="productoCarrito${productoCarrito.id}"> 
           <td>
             <img class="card-img-top" style="max-width: 120px;" src="assets/${productoCarrito.imagen}" alt="">
           </td>
@@ -145,21 +147,20 @@ function cargarProductosCarrito(array){
       </table>
     `     
    })
-   //segundo for each adjunta EVENTOS eliminar
    array.forEach((productoCarrito) => {
-      //EVENTO PARA SUMAR UNA UNIDAD
+      //SUMA LA CANTIDAD EN EL PRODUCTO
       document.getElementById(`botonSumarUnidad${productoCarrito.id}`).addEventListener("click", () => {
-         console.log(`Se ha sumado una unidad`);
+         // console.log(`Se ha sumado una unidad`);
          productoCarrito.sumarUnidad();
-         console.log(productoCarrito.cantidad);
+         // console.log(productoCarrito.cantidad);
          localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
          cargarProductosCarrito(productosEnCarrito);
        });
 
-      //EVENTO PARA RESTAR UNA UNIDAD
+      //RESTA LA CANTIDAD EN EL PRODUCTO
       document.getElementById(`botonEliminarUnidad${productoCarrito.id}`).addEventListener("click", () => {
          let cantProd = productoCarrito.restarUnidad();
-         console.log(cantProd);
+         // console.log(cantProd);
          if (cantProd < 1) {
            let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`);
            cardProducto.remove();
@@ -174,41 +175,47 @@ function cargarProductosCarrito(array){
          cargarProductosCarrito(productosEnCarrito);
        });      
 
-      //EVENTO PARA ELIMINAR TODO EL PRODUCTO
-      //manipular el DOM sin guardar en variable
+      //ELIMINA EL PRODUCTO
       document.getElementById(`botonEliminar${productoCarrito.id}`).addEventListener("click", () => {
-         console.log(`Eliminar producto`)
-         console.log( document.getElementById('botonEliminar'))
-         //borrar del DOM
-         let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`)
-         cardProducto.remove()
-         //borrar del array
-         //encontramos objeto a eliminar
-         let productoEliminar = array.find((producto) => producto.id == productoCarrito.id)
-         console.log(productoEliminar)
-         //buscar indice
-         let posicion = array.indexOf(productoEliminar)
-         console.log(posicion)
-         array.splice(posicion,1)
-         console.log(array)
-         //setear storage
-         localStorage.setItem("carrito", JSON.stringify(array))
-         //
-         calcularTotal(array)
+         console.log(`Eliminar producto`);
+         // Buscar el índice del producto a eliminar en el array
+         const productoIndex = array.findIndex((producto) => producto.id === productoCarrito.id);
+         
+         if (productoIndex !== -1) {
+           // Elimina el producto del array
+           array.splice(productoIndex, 1);
+           // Actualiza el storage con el nuevo array
+           localStorage.setItem("carrito", JSON.stringify(array));
+           // Vuelvo a cargar los productos en el carrito
+           cargarProductosCarrito(array);
+         }
+         // Actualizar el total después de eliminar el producto
+         calcularTotal(array);
       })
    })
    calcularTotal(array)
    
 }
 
-function calcularTotal(array){
-   //método reduce 
-   //DOS PARAMETROS: primero la function y segundo valor en el que quiero inicializar el acumulador
-   let total = array.reduce((acc, productoCarrito)=> acc + (productoCarrito.precio * productoCarrito.cantidad), 0)
+// function calcularTotal(array){
+//    //método reduce 
+//    //DOS PARAMETROS: primero la function y segundo valor en el que quiero inicializar el acumulador
+//    let total = array.reduce((acc, productoCarrito)=> acc + (productoCarrito.precio * productoCarrito.cantidad), 0)
    
-   total == 0 ? precioTotal.innerHTML= `No hay productos en el carrito` : precioTotal.innerHTML = ` Total: <strong>${total}</strong>`
+//    total == 0 ? precioTotal.innerHTML= `No hay productos en el carrito` : precioTotal.innerHTML = ` Total: <strong>${total}</strong>`
 
-}
+// }
+
+function calcularTotal(array) {
+   let total = array.reduce((acc, productoCarrito) => {
+     if (productoCarrito.cantidad) {
+       return acc + productoCarrito.precio * productoCarrito.cantidad;
+     }
+     return acc;
+   }, 0);
+ 
+   precioTotal.textContent = total == 0 ? `No hay productos en el carrito` : `Total: ${total}`;
+ }
 //////////////////////
 
 function ordenarMenorMayor(array){

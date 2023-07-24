@@ -9,41 +9,69 @@ class Producto {
       this.cantidad = 1;
     }
     sumarUnidad() {
-      this.cantidad = this.cantidad + 1;
+      this.cantidad = parseInt(this.cantidad) + 1;
       return this.cantidad;
     }
     restarUnidad() {
-      this.cantidad = this.cantidad - 1;
+      this.cantidad = parseInt(this.cantidad) - 1;
       return this.cantidad;
     }
   }
   
+  let mercaderia = [];
   const cargarMercaderia = async () => {
     const res = await fetch("productos.json");
     const data = await res.json();
-  
-    for (let producto of data) {
-      const nuevoProducto = new Producto(
-        producto.id,
-        producto.descripcion,
-        producto.nombre,
-        producto.precio,
-        producto.imagen
-      );
-      mercaderia.push(nuevoProducto);
-    }
-    localStorage.setItem("mercaderia", JSON.stringify(mercaderia));
+    return data.map((producto) => new Producto(
+      producto.id,
+      producto.descripcion,
+      producto.nombre,
+      producto.precio,
+      producto.imagen
+    ));
+    
   };
   
-  let mercaderia = [];
+  (async () => {
+    mercaderia = await cargarMercaderia();
+    mostrarCatalogo(mercaderia);
+
+    if (localStorage.getItem("mercaderia")) {
+        console.log(`Existe mercaderia en el storage`);
+        mercaderia = JSON.parse(localStorage.getItem("mercaderia"));
+      } else {
+        console.log(`No existe mercaderia en el storage`);
+        localStorage.setItem("mercaderia", JSON.stringify(mercaderia));
+    }
+
+  })();
+
+//   const cargarMercaderia = async () => {
+//     const res = await fetch("productos.json");
+//     const data = await res.json();
   
-  if (localStorage.getItem("mercaderia")) {
-    console.log(`Existe mercaderia en el storage`);
-    mercaderia = JSON.parse(localStorage.getItem("mercaderia"));
-  } else {
-    console.log(`No existe mercaderia en el storage`);
-    cargarMercaderia();
-  }
+//     for (let producto of data) {
+//       const nuevoProducto = new Producto(
+//         producto.id,
+//         producto.descripcion,
+//         producto.nombre,
+//         producto.precio,
+//         producto.imagen
+//       );
+//       mercaderia.push(nuevoProducto);
+//     }
+//     localStorage.setItem("mercaderia", JSON.stringify(mercaderia));
+//   };
+  
+//   let mercaderia = [];
+  
+//   if (localStorage.getItem("mercaderia")) {
+//     console.log(`Existe mercaderia en el storage`);
+//     mercaderia = JSON.parse(localStorage.getItem("mercaderia"));
+//   } else {
+//     console.log(`No existe mercaderia en el storage`);
+//     cargarMercaderia();
+//   }
   
 
 // //class constructora
