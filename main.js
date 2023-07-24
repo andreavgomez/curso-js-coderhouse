@@ -1,21 +1,21 @@
 //capturar DOM
 let ProductosDiv = document.getElementById("Productos")
-// let selectOrden = document.getElementById("selectOrden")
 let agregarProductoBtn = document.getElementById("guardarProductoBtn")
 let buscador = document.getElementById("buscador")
 let coincidencia = document.getElementById("coincidencia")
 let modalBodyCarrito = document.getElementById("modal-bodyCarrito")
 let botonCarrito = document.getElementById("botonCarrito")
 let precioTotal = document.getElementById("precioTotal")
+let botonFinalizarCompra = document.getElementById("botonFinalizarCompra")
 
 //array con productos en carrito
 let productosEnCarrito 
-//pensemos el localStorage
+//localStorage
 if(localStorage.getItem("carrito")){
-   //cuando ya existe algo en el storage con la clave carrito
+   //Si existe en el storage con la clave carrito
    productosEnCarrito = JSON.parse(localStorage.getItem("carrito"))
 }else{
-   //no existe nada en el storage
+   //no existe en el storage
    productosEnCarrito = []
    localStorage.setItem("carrito", productosEnCarrito)
 }
@@ -35,16 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
        opcionCargaProducto.textContent = "Cargar nuevo Producto";
      }
    });
- 
-   // opcionCargaProducto.addEventListener("click", function() {
-   //   if (cargarProducto.style.display === "none") {
-   //     cargarProducto.style.display = "block";
-   //     opcionCargaProducto.textContent = "Ocultar Carga de Producto";
-   //   } else {
-   //     cargarProducto.style.display = "none";
-   //     opcionCargaProducto.textContent = "Cargar nuevo Producto";
-   //   }
-   // });
 
    // Evento "Cargar nuevo producto"
    opcionCargaProducto.addEventListener("click", function () {
@@ -94,7 +84,6 @@ function mostrarCatalogo(array){
 
 }
 
-// Función para agregar un producto al carrito
 function agregarAlCarrito(producto) {
    let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === producto.id);
    if (ProductoAgregado === undefined) {
@@ -108,12 +97,24 @@ function agregarAlCarrito(producto) {
      productosEnCarrito.push(productoNuevo);
      localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
      console.log(`El Producto ${producto.nombre} se ha agregado con éxito.`);
-     alert(`El Producto se ha agregado con éxito.`);
+     //Sweetalert 
+     Swal.fire({
+        title: `El Producto se agregó al carrito exitosamente !!`,
+        confirmButtonColor: "blue",
+        confirmButtonText : "Ok"
+     })
+
    } else {
      ProductoAgregado.sumarUnidad();
      localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
      console.log(`El Producto ${Producto.nombre} ya existe en el carrito.`);
-     alert(`El Producto ya existe en el carrito.`);
+     //Sweetalert 
+     Swal.fire({
+        title: `El Producto ya existe en el carrito`,
+        icon: "info",
+        showConfirmButton: false,
+        timer: 2800
+     })     
    }
  }
 
@@ -225,15 +226,6 @@ function cargarProductosCarrito(array){
    
 }
 
-// function calcularTotal(array){
-//    //método reduce 
-//    //DOS PARAMETROS: primero la function y segundo valor en el que quiero inicializar el acumulador
-//    let total = array.reduce((acc, productoCarrito)=> acc + (productoCarrito.precio * productoCarrito.cantidad), 0)
-   
-//    total == 0 ? precioTotal.innerHTML= `No hay productos en el carrito` : precioTotal.innerHTML = ` Total: <strong>${total}</strong>`
-
-// }
-
 function calcularTotal(array) {
    let total = array.reduce((acc, productoCarrito) => {
      if (productoCarrito.cantidad) {
@@ -247,7 +239,7 @@ function calcularTotal(array) {
 //////////////////////
 
 function ordenarMenorMayor(array){
-   //Hace una copia del array original, para aplicar sort y no modificar Mercaderia
+   //Copia del array original, para aplicar sort y no modificar Mercaderia
    const menorMayor = [].concat(array)
    console.log(menorMayor)
    //ordena en forma ascendente por precio
@@ -285,14 +277,14 @@ function agregarProducto(array){
    let precioIngresado = document.getElementById("precioInput")
    
    const ProductoNuevo = new Producto(array.length+1,descripcionIngresado.value, nombreIngresado.value, parseInt(precioIngresado.value), "productoNuevo.png")
-   //pusheo al array:
+   //pusheo el producto al array:
    array.push(ProductoNuevo)
 
    //setear en el storage el array con el Producto
    localStorage.setItem("mercaderia", JSON.stringify(array))
    mostrarCatalogo(array)
    
-   //reseteo el formulario
+   //resetear formulario
    descripcionIngresado.value = ""
    nombreIngresado.value = ""
    precioIngresado.value = ""
@@ -308,6 +300,37 @@ function buscarInfo(buscado, array){
    mostrarCatalogo(busqueda)) :
    (coincidencia.innerHTML = "", mostrarCatalogo(busqueda)) 
  }
+
+ function finalizarCompra(array){
+  //Sweetalert 
+  Swal.fire({
+     title: '¿Desea confirmar su compra?',
+     icon: 'info',
+     showCancelButton: true,
+     confirmButtonText: 'Confirmar',
+     cancelButtonText: 'Cancelar',
+     confirmButtonColor: 'blue',
+     cancelButtonColor: 'red',
+ }).then((result) => {
+     if(result.isConfirmed){
+        let totalFinal = calcularTotal(array)
+        Swal.fire({
+           title: 'Su compra se realizó con éxito',
+           icon: 'success',
+           confirmButtonColor: 'blue'
+           })
+        productosEnCarrito = []
+        localStorage.removeItem("carrito")
+     }else{
+        Swal.fire({
+           title: 'Su Compra fue cancelada',
+           icon: 'info',
+           text: `Su Compra fue cancelada, pero sus productos siguen en el carrito`,
+           confirmButtonColor: 'blue'
+       })
+     }
+ } )
+}
 
 ///////////
 //EVENTOS:
@@ -349,3 +372,8 @@ buscador.addEventListener("input", () => {
 })
 
 document.getElementById("formAgregarCarrito").disabled = false;
+
+//btn finalizar compra y su acción:
+botonFinalizarCompra.addEventListener("click", () =>{
+  finalizarCompra(productosEnCarrito)
+})
