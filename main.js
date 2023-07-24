@@ -82,37 +82,22 @@ function mostrarCatalogo(array){
 
 }
 
-// function agregarAlCarrito(Producto){
-//    //preguntar si existe ese Producto en el array
-//    let ProductoAgregado = productosEnCarrito.find((elem)=>elem.id == Producto.id) 
-//    //me devuelve sino encuentra undefined, si encuenta el elemento
-//    if(ProductoAgregado == undefined){
-//       //código para sumar al array carrito
-//       productosEnCarrito.push(Producto)
-//       localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
-//       console.log(productosEnCarrito)
-//    }else{
-//       //sumar uno a cantidad
-//       console.log(`El Producto ${Producto.nombre} ya existe en el carrito `)
-//    }
-// }
-
-function agregarAlCarrito(Producto){
-   //preguntar si existe ese Producto en el array
-   let ProductoAgregado = productosEnCarrito.find((elem)=>elem.id == Producto.id) 
-   //me devuelve sino encuentra undefined, si encuenta el elemento
-   if(ProductoAgregado == undefined){
-      //código para sumar al array carrito
-      productosEnCarrito.push(Producto)
-      localStorage.setItem("carrito", JSON.stringify(productosEnCarrito))
-      console.log(`El Producto ${productosEnCarrito} se agregado con exito `)
-      alert(`El Producto, se agregado con exito `)
-   }else{
-      //sumar uno a cantidad
-      console.log(`El Producto ${Producto.nombre} ya existe en el carrito `)
-      alert(`El Producto, ya existe en el carrito `)
+// Función para agregar un producto al carrito
+function agregarAlCarrito(producto) {
+   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === Producto.id);
+   if (ProductoAgregado === undefined) {
+     const productoNuevo = new Producto(producto);
+     productosEnCarrito.push(productoNuevo);
+     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+     console.log(`El Producto ${productoNuevo.nombre} se ha agregado con éxito.`);
+     alert(`El Producto se ha agregado con éxito.`);
+   } else {
+     ProductoAgregado.sumarUnidad();
+     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+     console.log(`El Producto ${Producto.nombre} ya existe en el carrito.`);
+     alert(`El Producto ya existe en el carrito.`);
    }
-}
+ }
 
 function cargarProductosCarrito(array){
    modalBodyCarrito.innerHTML = ``
@@ -163,44 +148,31 @@ function cargarProductosCarrito(array){
    //segundo for each adjunta EVENTOS eliminar
    array.forEach((productoCarrito) => {
       //EVENTO PARA SUMAR UNA UNIDAD
-      document.getElementById(`botonSumarUnidad${productoCarrito.id}`).addEventListener("click", () =>{
-         console.log(`Se ha sumado una unidad`)
-         //utilizo método creado en la class constructora
-         productoCarrito.sumarUnidad()
-         console.log(productoCarrito.cantidad)
-         //setear el storage
-         localStorage.setItem("carrito", JSON.stringify(array))
-         //para actualizar el DOM re imprimimos todo
-         cargarProductosCarrito(array)
-      })
+      document.getElementById(`botonSumarUnidad${productoCarrito.id}`).addEventListener("click", () => {
+         console.log(`Se ha sumado una unidad`);
+         productoCarrito.sumarUnidad();
+         console.log(productoCarrito.cantidad);
+         localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+         cargarProductosCarrito(productosEnCarrito);
+       });
+
       //EVENTO PARA RESTAR UNA UNIDAD
-      document.getElementById(`botonEliminarUnidad${productoCarrito.id}`).addEventListener("click", ()=>{         
-         let cantProd = productoCarrito.restarUnidad()
-         console.log(cantProd)
-         if(cantProd < 1){
-            //borrar del DOM
-            let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`)
-            cardProducto.remove()
-            //borrar del array
-            //encontramos objeto a eliminar
-            let productoEliminar = array.find((producto) => producto.id == productoCarrito.id)
-            console.log(productoEliminar)
-            //buscar indice
-            let posicion = array.indexOf(productoEliminar)
-            console.log(posicion)
-            array.splice(posicion,1)
-            console.log(array)
-            //setear storage
-            localStorage.setItem("carrito", JSON.stringify(array))
-            //
-            calcularTotal(array)
-            }
-            else{
-                localStorage.setItem("carrito", JSON.stringify(array))
-            }
-         
-         cargarProductosCarrito(array)
-      })
+      document.getElementById(`botonEliminarUnidad${productoCarrito.id}`).addEventListener("click", () => {
+         let cantProd = productoCarrito.restarUnidad();
+         console.log(cantProd);
+         if (cantProd < 1) {
+           let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`);
+           cardProducto.remove();
+           let productoEliminar = productosEnCarrito.find((producto) => producto.id === productoCarrito.id);
+           let posicion = productosEnCarrito.indexOf(productoEliminar);
+           productosEnCarrito.splice(posicion, 1);
+           localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+           calcularTotal(productosEnCarrito);
+         } else {
+           localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+         }
+         cargarProductosCarrito(productosEnCarrito);
+       });      
 
       //EVENTO PARA ELIMINAR TODO EL PRODUCTO
       //manipular el DOM sin guardar en variable
@@ -332,9 +304,10 @@ selectOrden.addEventListener("change", () => {
 }
 )
 
+// Evento para mostrar el carrito al hacer clic en el botón
 botonCarrito.addEventListener("click", () => {
-   cargarProductosCarrito(productosEnCarrito)
-})
+   cargarProductosCarrito(productosEnCarrito);
+ });
 
 buscador.addEventListener("input", () => {
    buscarInfo(buscador.value, mercaderia)

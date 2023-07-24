@@ -1,0 +1,45 @@
+[    
+    {
+        "id": 1,
+        "descripcion": "Con chocolate y oreos",
+        "nombre": "Brownie con Oreo",
+        "precio": 3200,
+        "imagen": "brownie_oreo.jpg"
+    },
+    {
+        "id": 2,
+        "descripcion": "Con crema de limon",
+        "nombre": "Torta Lemon pie",
+        "precio": 3000,
+        "imagen": "lemon_pie.jpg"
+    },
+    {
+        
+        "id": 3,
+        "descripcion": "Con crema chantilly",
+        "nombre": "Torta de Frutillas",
+        "precio": 2800,
+        "imagen": "frutillas.jpg"
+    },
+    {
+        "id": 4,
+        "descripcion": "Masa de hojaldre",
+        "nombre": "Mil hojas",
+        "precio": 3800,
+        "imagen": "milHojas.jpg"           
+    },
+    {
+        "id": 5,
+        "descripcion": "Con mousse de chocolate",
+        "nombre": "Torta de Chocolate",
+        "precio": 2200,
+        "imagen": "chocolate.jpg"      
+    },
+    {
+        "id": 6,
+        "descripcion": "Con dulce de leche",
+        "nombre": "Torta Brownie",
+        "precio": 2500,
+        "imagen": "brownie.jpg"      
+    }
+]
