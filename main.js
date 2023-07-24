@@ -117,6 +117,71 @@ function agregarAlCarrito(producto) {
    }
  }
 
+ function sumarUnidad(productoCarrito) {
+   productoCarrito.sumarUnidad();
+   localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+   cargarProductosCarrito(productosEnCarrito);
+ }
+ 
+ // Asignar evento a los botones de sumar
+ function asignarEventoSumar() {
+   productosEnCarrito.forEach((productoCarrito) => {
+     document.getElementById(`botonSumarUnidad${productoCarrito.id}`).addEventListener("click", () => {
+       sumarUnidad(productoCarrito);
+     });
+   });
+ }
+ 
+ function restarUnidad(productoCarrito) {
+   let cantProd = productoCarrito.restarUnidad();
+   if (cantProd < 1) {
+     let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`);
+     cardProducto.remove();
+     let productoEliminar = productosEnCarrito.find((producto) => producto.id === productoCarrito.id);
+     let posicion = productosEnCarrito.indexOf(productoEliminar);
+     productosEnCarrito.splice(posicion, 1);
+     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+     calcularTotal(productosEnCarrito);
+   } else {
+     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+   }
+   cargarProductosCarrito(productosEnCarrito);
+ }
+ 
+ // Asignar evento a los botones de restar
+ function asignarEventoRestar() {
+   productosEnCarrito.forEach((productoCarrito) => {
+     document.getElementById(`botonEliminarUnidad${productoCarrito.id}`).addEventListener("click", () => {
+       restarUnidad(productoCarrito);
+     });
+   });
+ }
+
+ function eliminarProducto(productoCarrito) {
+   // Buscar el índice del producto a eliminar en el array
+   const productoIndex = productosEnCarrito.findIndex((producto) => producto.id === productoCarrito.id);
+ 
+   if (productoIndex !== -1) {
+     // Elimina el producto del array
+     productosEnCarrito.splice(productoIndex, 1);
+     // Actualiza el storage con el nuevo array
+     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+     // Vuelvo a cargar los productos en el carrito
+     cargarProductosCarrito(productosEnCarrito);
+   }
+   // Actualizar el total después de eliminar el producto
+   calcularTotal(productosEnCarrito);
+ }
+ 
+ // Asignar evento a los botones de eliminar
+ function asignarEventoEliminar() {
+   productosEnCarrito.forEach((productoCarrito) => {
+     document.getElementById(`botonEliminar${productoCarrito.id}`).addEventListener("click", () => {
+       eliminarProducto(productoCarrito);
+     });
+   });
+ } 
+
 function cargarProductosCarrito(array){
    modalBodyCarrito.innerHTML = ``
    array.forEach((productoCarrito)=>{
@@ -148,50 +213,13 @@ function cargarProductosCarrito(array){
     `     
    })
    array.forEach((productoCarrito) => {
-      //SUMA LA CANTIDAD EN EL PRODUCTO
-      document.getElementById(`botonSumarUnidad${productoCarrito.id}`).addEventListener("click", () => {
-         // console.log(`Se ha sumado una unidad`);
-         productoCarrito.sumarUnidad();
-         // console.log(productoCarrito.cantidad);
-         localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-         cargarProductosCarrito(productosEnCarrito);
-       });
-
-      //RESTA LA CANTIDAD EN EL PRODUCTO
-      document.getElementById(`botonEliminarUnidad${productoCarrito.id}`).addEventListener("click", () => {
-         let cantProd = productoCarrito.restarUnidad();
-         // console.log(cantProd);
-         if (cantProd < 1) {
-           let cardProducto = document.getElementById(`productoCarrito${productoCarrito.id}`);
-           cardProducto.remove();
-           let productoEliminar = productosEnCarrito.find((producto) => producto.id === productoCarrito.id);
-           let posicion = productosEnCarrito.indexOf(productoEliminar);
-           productosEnCarrito.splice(posicion, 1);
-           localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-           calcularTotal(productosEnCarrito);
-         } else {
-           localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-         }
-         cargarProductosCarrito(productosEnCarrito);
-       });      
-
-      //ELIMINA EL PRODUCTO
-      document.getElementById(`botonEliminar${productoCarrito.id}`).addEventListener("click", () => {
-         console.log(`Eliminar producto`);
-         // Buscar el índice del producto a eliminar en el array
-         const productoIndex = array.findIndex((producto) => producto.id === productoCarrito.id);
-         
-         if (productoIndex !== -1) {
-           // Elimina el producto del array
-           array.splice(productoIndex, 1);
-           // Actualiza el storage con el nuevo array
-           localStorage.setItem("carrito", JSON.stringify(array));
-           // Vuelvo a cargar los productos en el carrito
-           cargarProductosCarrito(array);
-         }
-         // Actualizar el total después de eliminar el producto
-         calcularTotal(array);
-      })
+      // Llamar a las funciones para asignar los eventos
+      asignarEventoSumar();
+      asignarEventoRestar();
+      asignarEventoEliminar();
+      // Actualizar el total después de eliminar el producto
+      calcularTotal(array);
+      // })
    })
    calcularTotal(array)
    
