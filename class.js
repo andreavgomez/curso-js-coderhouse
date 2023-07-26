@@ -1,4 +1,4 @@
-//class constructora
+//Clase Constructora
 class Producto {
     constructor(id, descripcion, nombre, precio, imagen) {
       this.id = id;
