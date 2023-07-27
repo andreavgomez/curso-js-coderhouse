@@ -82,6 +82,40 @@ function mostrarCatalogo(array) {
 
 }
 
+// function agregarAlCarrito(producto) {
+//   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === producto.id);
+//   if (ProductoAgregado === undefined) {
+//     const productoNuevo = new Producto(
+//       producto.id,
+//       producto.descripcion,
+//       producto.nombre,
+//       producto.precio,
+//       producto.imagen
+//     );
+//     productosEnCarrito.push(productoNuevo);
+//     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+//     console.log(`El Producto ${producto.nombre} se ha agregado con éxito.`);
+//     //Sweetalert 
+//     Swal.fire({
+//       title: `El Producto se agregó al carrito exitosamente !!`,
+//       confirmButtonColor: "blue",
+//       confirmButtonText: "Ok"
+//     })
+
+//   } else {
+//     ProductoAgregado.sumarUnidad();
+//     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+//     console.log(`El Producto ${Producto.nombre} ya existe en el carrito.`);
+//     //Sweetalert 
+//     Swal.fire({
+//       title: `El Producto ya existe en el carrito`,
+//       icon: "info",
+//       showConfirmButton: false,
+//       timer: 2800
+//     })
+//   }
+// }
+
 function agregarAlCarrito(producto) {
   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === producto.id);
   if (ProductoAgregado === undefined) {
@@ -105,7 +139,7 @@ function agregarAlCarrito(producto) {
   } else {
     ProductoAgregado.sumarUnidad();
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-    console.log(`El Producto ${Producto.nombre} ya existe en el carrito.`);
+    console.log(`El Producto ${ProductoAgregado.nombre} ya existe en el carrito.`);
     //Sweetalert 
     Swal.fire({
       title: `El Producto ya existe en el carrito`,
@@ -115,6 +149,7 @@ function agregarAlCarrito(producto) {
     })
   }
 }
+
 
 function sumarUnidad(productoCarrito) {
   productoCarrito.sumarUnidad();

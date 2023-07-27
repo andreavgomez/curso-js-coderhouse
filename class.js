@@ -31,20 +31,22 @@ class Producto {
     ));
     
   };
+
+(async () => {
+  mercaderia = await cargarMercaderia();
   
-  (async () => {
-    mercaderia = await cargarMercaderia();
-    mostrarCatalogo(mercaderia);
+  if (localStorage.getItem("mercaderia")) {
+    console.log(`Existe mercaderia en el storage`);
+    mercaderia = JSON.parse(localStorage.getItem("mercaderia"));
+  } else {
+    console.log(`No existe mercaderia en el storage`);
+    localStorage.setItem("mercaderia", JSON.stringify(mercaderia));
+  }
 
-    if (localStorage.getItem("mercaderia")) {
-        console.log(`Existe mercaderia en el storage`);
-        mercaderia = JSON.parse(localStorage.getItem("mercaderia"));
-      } else {
-        console.log(`No existe mercaderia en el storage`);
-        localStorage.setItem("mercaderia", JSON.stringify(mercaderia));
-    }
+  mostrarCatalogo(mercaderia);
 
-  })();
+})();
+
 
 //   const cargarMercaderia = async () => {
 //     const res = await fetch("productos.json");
