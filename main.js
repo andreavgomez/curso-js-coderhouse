@@ -9,6 +9,7 @@ let precioTotal = document.getElementById("precioTotal")
 let botonFinalizarCompra = document.getElementById("botonFinalizarCompra")
 let botonConexion = document.getElementById("botonConexion");
 let botonConectar = document.getElementById("botonConectar");
+let modalConexion;
 
 //array con los productos en el carrito
 let productosEnCarrito
@@ -53,8 +54,29 @@ document.addEventListener("DOMContentLoaded", function () {
   mostrarCatalogo(mercaderia);
 
   //////////////////////////////////
-  // Vincular el evento al hacer clic en el ícono de conexión
-  botonConexion.addEventListener("click", mostrarModalConexion);
+  // // Vincular el evento al hacer clic en el ícono de conexión
+  // botonConexion.addEventListener("click", mostrarModalConexion);
+
+  // Evento para mostrar el modal de conexion al hacer clic en el botón
+  botonConexion.addEventListener("click", () => {
+    mostrarModalConexion();
+  });
+
+  // Función para mostrar el modal de conexión
+  function mostrarModalConexion() {
+    let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
+    modalConexion.show();
+  }
+
+  // Cerrar el modal después de hacer clic en "Conectar"
+  let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
+  modalConexion.hide();
+
+  // Vincular el evento al hacer clic en el botón "Cerrar" dentro del modal
+  document.querySelector("#modalConexion .btn-close").addEventListener("click", () => {
+    let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
+    modalConexion.hide();
+  });
 
   // Vincular el evento al hacer clic en el botón "Conectar" dentro del modal
   botonConectar.addEventListener("click", () => {
@@ -67,10 +89,12 @@ document.addEventListener("DOMContentLoaded", function () {
       // Si el usuario es admin, habilitar opciones
       console.log("habilitarOpcionesAdmin")
       habilitarOpcionesAdmin();
+      modalConexion.hide();
     } else {
       // Si el usuario no es admin, deshabilitar opciones
       console.log("deshabilitarOpcionesNoAdmin")
       deshabilitarOpcionesNoAdmin();
+      modalConexion.hide();
     }
 
     // Actualizar el array mercaderia antes de mostrar el catálogo
@@ -79,15 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
       mostrarCatalogo(mercaderia);
     });
 
-    // Cerrar el modal después de hacer clic en "Conectar"
-    let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
-    modalConexion.hide();
-
-    // Vincular el evento al hacer clic en el botón "Cerrar" dentro del modal
-    document.querySelector("#modalConexion .btn-close").addEventListener("click", () => {
-      let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
-      modalConexion.hide();
-    });
   });
   //////////////////////////////////  
 
@@ -97,12 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
 //FUNCTIONS 
 ///////////
 
-/////////////////////////////////////////////////
-// Función para mostrar el modal de conexión
-function mostrarModalConexion() {
-  let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
-  modalConexion.show();
-}
+////////////////////////////////////////////////
 
 // Habilitar opciones para usuario admin
 function habilitarOpcionesAdmin() {

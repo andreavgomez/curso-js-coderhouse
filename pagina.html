@@ -49,8 +49,11 @@
         </ul>
         <ul class="navbar-nav d-flex align-items-center">
           <li class="nav-item">
-            <i class="bi bi-person-circle bi-size navbar__icons me-3" id="botonConexion"
-              onclick="mostrarModalConexion()"></i>
+            <!-- <i class="bi bi-person-circle bi-size navbar__icons me-3" id="botonConexion"
+              onclick="mostrarModalConexion()"></i> -->
+            <a id="botonConexion" data-bs-toggle="modal" data-bs-target="#idModalConexion" class="btn btn-secondary ">
+              <i class="bi bi-person-circle bi-size"></i>
+            </a>  
           </li>
           <li className="nav-item">
             <a id="botonCarrito" data-bs-toggle="modal" data-bs-target="#idModalCarrito" class="btn btn-secondary "><i
@@ -65,8 +68,7 @@
   </nav>
 
   <!-- Modal de conexión -->
-  <div class="modal fade" id="modalConexion" tabindex="-1" aria-labelledby="modalConexionLabel" aria-hidden="true"
-    data-bs-backdrop="static">
+  <div class="modal fade" id="modalConexion" tabindex="-1" aria-labelledby="modalConexionLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
