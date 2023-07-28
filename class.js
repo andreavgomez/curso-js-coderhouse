@@ -50,15 +50,15 @@ class Producto {
 // Resto del código...
 
 // Agrega el método "hide" al objeto Modal para poder cerrarlo programáticamente
-if (typeof bootstrap !== "undefined" && typeof bootstrap.Modal !== "undefined") {
-  bootstrap.Modal.prototype.hide = function () {
-    const backdrop = document.querySelector(".modal-backdrop");
-    if (backdrop) {
-      backdrop.remove();
-    }
-    this._element.style.display = "none";
-  };
-}
+// if (typeof bootstrap !== "undefined" && typeof bootstrap.Modal !== "undefined") {
+//   bootstrap.Modal.prototype.hide = function () {
+//     const backdrop = document.querySelector(".modal-backdrop");
+//     if (backdrop) {
+//       backdrop.remove();
+//     }
+//     this._element.style.display = "none";
+//   };
+// }
 
 // Resto del código...
 
