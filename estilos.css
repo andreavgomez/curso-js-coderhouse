@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     border: 0;
     box-sizing: border-box;
@@ -7,24 +7,32 @@
 .select-espaciado {
     margin-left: 10px;
 }
-  
+
 .navbar-nav {
     margin-left: auto;
 }
-  
+
 .navbar-brand {
     margin-right: auto;
-} 
-  
+}
+
 #selectOrden {
-    margin-left: 10px; 
-  }
-  
-.body{
+    margin-left: 10px;
+}
+
+.body {
     background-color: rgb(145, 145, 145);
 }
 
-.ofertaLibro{
-    color:red;
+.ofertaLibro {
+    color: red;
     font-weight: bold;
+}
+
+.bi-size {
+    font-size: 2em;
+}
+
+.img-size {
+    font-size: 5em;
 }

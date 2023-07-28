@@ -7,6 +7,8 @@ let modalBodyCarrito = document.getElementById("modal-bodyCarrito")
 let botonCarrito = document.getElementById("botonCarrito")
 let precioTotal = document.getElementById("precioTotal")
 let botonFinalizarCompra = document.getElementById("botonFinalizarCompra")
+let botonConexion = document.getElementById("botonConexion");
+let botonConectar = document.getElementById("botonConectar");
 
 //array con los productos en el carrito
 let productosEnCarrito
@@ -21,6 +23,8 @@ if (localStorage.getItem("carrito")) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Aca va el código que se ejecuta después de que se carga el DOM
+
   let cargarProducto = document.getElementById("cargarProducto");
   let selectOrden = document.getElementById("selectOrden");
   let opcionCargaProducto = document.getElementById("mostrarCargarProducto");
@@ -47,11 +51,79 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   mostrarCatalogo(mercaderia);
+
+  //////////////////////////////////
+  // Vincular el evento al hacer clic en el ícono de conexión
+  botonConexion.addEventListener("click", mostrarModalConexion);
+
+  // Vincular el evento al hacer clic en el botón "Conectar" dentro del modal
+  botonConectar.addEventListener("click", () => {
+    console.log(botonConectar)
+    let usuarioInput = document.getElementById("usuarioInput").value;
+    let passwordInput = document.getElementById("passwordInput").value;
+    console.log(usuarioInput)
+    console.log(passwordInput)
+    if (usuarioInput === "admin" && passwordInput === "admin123") {
+      // Si el usuario es admin, habilitar opciones
+      console.log("habilitarOpcionesAdmin")
+      habilitarOpcionesAdmin();
+    } else {
+      // Si el usuario no es admin, deshabilitar opciones
+      console.log("deshabilitarOpcionesNoAdmin")
+      deshabilitarOpcionesNoAdmin();
+    }
+
+    // Actualizar el array mercaderia antes de mostrar el catálogo
+    cargarMercaderia().then((data) => {
+      mercaderia = data;
+      mostrarCatalogo(mercaderia);
+    });
+
+    // Cerrar el modal después de hacer clic en "Conectar"
+    let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
+    modalConexion.hide();
+
+    // Vincular el evento al hacer clic en el botón "Cerrar" dentro del modal
+    document.querySelector("#modalConexion .btn-close").addEventListener("click", () => {
+      let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
+      modalConexion.hide();
+    });
+  });
+  //////////////////////////////////  
+
 });
 
 ////////////
 //FUNCTIONS 
 ///////////
+
+/////////////////////////////////////////////////
+// Función para mostrar el modal de conexión
+function mostrarModalConexion() {
+  let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
+  modalConexion.show();
+}
+
+// Habilitar opciones para usuario admin
+function habilitarOpcionesAdmin() {
+  // Habilitar la opción "Cargar Nuevo Producto" en el select
+  console.log("En habilitarOpcionesAdmin")
+  document.querySelector('option[value="4"]').disabled = false;
+  console.log("option[value=4).disabled = false")
+  // Mostrar el botón "cargar nuevo producto"
+  document.getElementById("mostrarCargarProducto").style.display = "block";
+  console.log("mostrarCargarProducto.style.display = block")
+}
+
+// Deshabilitar opciones para usuario no admin
+function deshabilitarOpcionesNoAdmin() {
+  console.log("En DeshabilitarOpcionesAdmin")
+  // Deshabilitar la opción "Cargar Nuevo Producto" en el select
+  document.querySelector('option[value="4"]').disabled = true;
+  // Ocultar el botón "cargar nuevo producto"
+  document.getElementById("mostrarCargarProducto").style.display = "none";
+}
+/////////////////////////////////////////////////
 
 function mostrarCatalogo(array) {
   //resetear el DOM
@@ -81,40 +153,6 @@ function mostrarCatalogo(array) {
   }
 
 }
-
-// function agregarAlCarrito(producto) {
-//   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === producto.id);
-//   if (ProductoAgregado === undefined) {
-//     const productoNuevo = new Producto(
-//       producto.id,
-//       producto.descripcion,
-//       producto.nombre,
-//       producto.precio,
-//       producto.imagen
-//     );
-//     productosEnCarrito.push(productoNuevo);
-//     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-//     console.log(`El Producto ${producto.nombre} se ha agregado con éxito.`);
-//     //Sweetalert 
-//     Swal.fire({
-//       title: `El Producto se agregó al carrito exitosamente !!`,
-//       confirmButtonColor: "blue",
-//       confirmButtonText: "Ok"
-//     })
-
-//   } else {
-//     ProductoAgregado.sumarUnidad();
-//     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
-//     console.log(`El Producto ${Producto.nombre} ya existe en el carrito.`);
-//     //Sweetalert 
-//     Swal.fire({
-//       title: `El Producto ya existe en el carrito`,
-//       icon: "info",
-//       showConfirmButton: false,
-//       timer: 2800
-//     })
-//   }
-// }
 
 function agregarAlCarrito(producto) {
   let ProductoAgregado = productosEnCarrito.find((elem) => elem.id === producto.id);
@@ -362,6 +400,7 @@ function finalizarCompra(array) {
     }
   })
 }
+
 
 ///////////
 //EVENTOS:
