@@ -11,6 +11,8 @@ let botonConexion = document.getElementById("botonConexion");
 let botonConectar = document.getElementById("botonConectar");
 let modalConexion;
 
+document.getElementById("mostrarCargarProducto").style.display = "none";
+
 //array con los productos en el carrito
 let productosEnCarrito
 if (localStorage.getItem("carrito")) {
@@ -32,9 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   selectOrden.addEventListener("change", function () {
     if (selectOrden.value === "4") {
+      document.getElementById("mostrarCargarProducto").style.display = "block";
       cargarProducto.style.display = "block";
       opcionCargaProducto.textContent = "Ocultar Carga de Producto";
     } else {
+      document.getElementById("mostrarCargarProducto").style.display = "none";
       cargarProducto.style.display = "none";
       opcionCargaProducto.textContent = "Cargar nuevo Producto";
     }
@@ -185,8 +189,6 @@ function agregarAlCarrito(producto) {
     })
 
   } else {
-    ProductoAgregado.sumarUnidad();
-    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
     console.log(`El Producto ${ProductoAgregado.nombre} ya existe en el carrito.`);
     //Sweetalert 
     Swal.fire({
@@ -362,6 +364,14 @@ function agregarProducto(array) {
   //setear en el storage el array con el Producto
   localStorage.setItem("mercaderia", JSON.stringify(array))
   mostrarCatalogo(array)
+
+  console.log(`El Producto ${ProductoNuevo.nombre}, se creó con éxito.`);
+  //Sweetalert 
+  Swal.fire({
+    title: `El Producto ${ProductoNuevo.nombre}, se creó con éxito !!`,
+    confirmButtonColor: "blue",
+    confirmButtonText: "Ok"
+  })
 
   //resetear formulario
   descripcionIngresado.value = ""
