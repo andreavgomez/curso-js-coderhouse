@@ -179,8 +179,9 @@ function agregarAlCarrito(producto) {
       producto.imagen
     );
     productosEnCarrito.push(productoNuevo);
-    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));    
     console.log(`El Producto ${producto.nombre} se ha agregado con éxito.`);
+    verificarBotonFinalizarCompra(); // Verificar el botón cada vez que se agrega un producto
     //Sweetalert 
     Swal.fire({
       title: `El Producto se agregó al carrito exitosamente !!`,
@@ -225,6 +226,7 @@ function restarUnidad(productoCarrito) {
     let posicion = productosEnCarrito.indexOf(productoEliminar);
     productosEnCarrito.splice(posicion, 1);
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+    verificarBotonFinalizarCompra(); // Verificar el botón cada vez que se elimina un producto
     calcularTotal(productosEnCarrito);
   } else {
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
@@ -250,6 +252,7 @@ function eliminarProducto(productoCarrito) {
     productosEnCarrito.splice(productoIndex, 1);
     // Actualizar el storage con el nuevo array
     localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
+    verificarBotonFinalizarCompra(); // Verificar el botón cada vez que se elimina un producto
     // Cargar los productos en el carrito
     cargarProductosCarrito(productosEnCarrito);
   }
@@ -390,6 +393,17 @@ function buscarInfo(buscado, array) {
     (coincidencia.innerHTML = "", mostrarCatalogo(busqueda))
 }
 
+  // Función para verificar y mostrar u ocultar el botón "Finalizar Compra"
+  function verificarBotonFinalizarCompra() {
+    const botonFinalizarCompra = document.getElementById("botonFinalizarCompra");
+   
+    if (productosEnCarrito.length === 0) {
+      botonFinalizarCompra.style.display = "none"; // Ocultar el botón si el carrito está vacío
+    } else {
+      botonFinalizarCompra.style.display = "block"; // Mostrar el botón si el carrito no está vacío
+    }
+  }
+
 function finalizarCompra(array) {
   //Sweetalert 
   Swal.fire({
@@ -453,6 +467,7 @@ selectOrden.addEventListener("change", () => {
 // Evento para mostrar el carrito al hacer clic en el botón
 botonCarrito.addEventListener("click", () => {
   cargarProductosCarrito(productosEnCarrito);
+  verificarBotonFinalizarCompra(); // Verificar el botón cada vez que se elimina un producto
 });
 
 buscador.addEventListener("input", () => {
