@@ -11,6 +11,8 @@ let botonConexion = document.getElementById("botonConexion");
 let botonConectar = document.getElementById("botonConectar");
 let modalConexion;
 
+// Deshabilitar la opción "Cargar Nuevo Producto" en el select
+document.querySelector('option[value="4"]').disabled = true;
 document.getElementById("mostrarCargarProducto").style.display = "none";
 
 //array con los productos en el carrito
@@ -62,10 +64,42 @@ document.addEventListener("DOMContentLoaded", function () {
     mostrarModalConexion();
   });
 
-  // Función para mostrar el modal de conexión
   function mostrarModalConexion() {
     let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
     modalConexion.show();
+
+    // Vincular el evento al hacer clic en el botón "Conectar" dentro del modal
+    botonConectar.addEventListener("click", () => {
+      let usuarioInput = document.getElementById("usuarioInput").value;
+      let passwordInput = document.getElementById("passwordInput").value;
+
+      if (usuarioInput.trim() === "" || passwordInput.trim() === "") {
+        // Si el usuario o la contraseña están vacíos, mostrar un mensaje de error
+        Swal.fire({
+          title: "Error",
+          text: "Debe ingresar el usuario y la contraseña",
+          icon: "error",
+          confirmButtonColor: "blue",
+        });
+      } else if (usuarioInput === "admin" && passwordInput === "admin123") {
+        // Si el usuario es admin, habilitar opciones
+        console.log("habilitarOpcionesAdmin")
+        habilitarOpcionesAdmin();
+      } else {
+        // Si el usuario no es admin, deshabilitar opciones
+        console.log("deshabilitarOpcionesNoAdmin")
+        deshabilitarOpcionesNoAdmin();
+      }
+
+      // Actualizar el array mercaderia antes de mostrar el catálogo
+      cargarMercaderia().then((data) => {
+        mercaderia = data;
+        mostrarCatalogo(mercaderia);
+      });
+
+      // Cerrar el modal después de hacer clic en "Conectar"
+      modalConexion.hide();
+    });
   }
 
   // Cerrar el modal después de hacer clic en "Conectar"
@@ -76,33 +110,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector("#modalConexion .btn-close").addEventListener("click", () => {
     let modalConexion = new bootstrap.Modal(document.getElementById("modalConexion"));
     modalConexion.hide();
-  });
-
-  // Vincular el evento al hacer clic en el botón "Conectar" dentro del modal
-  botonConectar.addEventListener("click", () => {
-    console.log(botonConectar)
-    let usuarioInput = document.getElementById("usuarioInput").value;
-    let passwordInput = document.getElementById("passwordInput").value;
-    console.log(usuarioInput)
-    console.log(passwordInput)
-    if (usuarioInput === "admin" && passwordInput === "admin123") {
-      // Si el usuario es admin, habilitar opciones
-      console.log("habilitarOpcionesAdmin")
-      habilitarOpcionesAdmin();
-      modalConexion.hide();
-    } else {
-      // Si el usuario no es admin, deshabilitar opciones
-      console.log("deshabilitarOpcionesNoAdmin")
-      deshabilitarOpcionesNoAdmin();
-      modalConexion.hide();
-    }
-
-    // Actualizar el array mercaderia antes de mostrar el catálogo
-    cargarMercaderia().then((data) => {
-      mercaderia = data;
-      mostrarCatalogo(mercaderia);
-    });
-
   });
 
 });
