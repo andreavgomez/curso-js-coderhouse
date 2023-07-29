@@ -19,8 +19,11 @@ class Producto {
   }
   
   let mercaderia = [];
+  ////////////////////////////////////////////////////////////////////////////////
+  // Version con Mockapi: https://64a6eda4096b3f0fcc80d83e.mockapi.io/productos
+  ///////////////////////////////////////////////////////////////////////////////
   const cargarMercaderia = async () => {
-    const res = await fetch("productos.json");
+    const res = await fetch("https://64a6eda4096b3f0fcc80d83e.mockapi.io/productos");
     const data = await res.json();
     return data.map((producto) => new Producto(
       producto.id,
@@ -30,7 +33,23 @@ class Producto {
       producto.imagen
     ));
     
-  };
+  };  
+  
+  ////////////////////////////////////////////////////////////////////////////////
+  // Version con archivo productos.json
+  ///////////////////////////////////////////////////////////////////////////////
+  // const cargarMercaderia = async () => {
+  //   const res = await fetch("productos.json");
+  //   const data = await res.json();
+  //   return data.map((producto) => new Producto(
+  //     producto.id,
+  //     producto.descripcion,
+  //     producto.nombre,
+  //     producto.precio,
+  //     producto.imagen
+  //   ));
+    
+  // };
 
 (async () => {
   mercaderia = await cargarMercaderia();
@@ -46,46 +65,3 @@ class Producto {
   mostrarCatalogo(mercaderia);
 
 })();
-
-////////////////////////////////////////////////////////////////////////////////
-// Version con Mockapi  https://64a6eda4096b3f0fcc80d83e.mockapi.io/productos//
-///////////////////////////////////////////////////////////////////////////////
-// let mercaderia = [] 
- 
-// if ( localStorage.getItem("mercaderia") ) {
-//     //Si existe mercaderia, me la traigo del storage
-//     console.log(`Esiste mercaderia en el store`)
-//     mercaderia = JSON.parse(localStorage.getItem("mercaderia"))
-// } else {
-//     //Si No existe mercaderia en el storage, la cargo
-//     console.log(`No esiste mercaderia en el store`)
-//     cargarMercaderia()
-//     // console.log(`Antes del getItem Mercaderia`)
-//     // mercaderia = JSON.parse(localStorage.getItem("mercaderia"))
-// }
-
-// /////////////////////////////////////////////////
-// // const cargarMercaderia = async () =>{
-// //     // const res = await fetch("productos.json")
-// //     // const productos = await res.json()
-
-// //     fetch("https://64a6eda4096b3f0fcc80d83e.mockapi.io/productos")
-// //       .then((res) => res.json())
-// //       .then((productos) => {
-// //         this.productos = productos;
-// //     //   });    
-
-// //     for(let producto of this.productos){
-// //         // let nuevoProducto = new Producto(producto.id, producto.descripcion, producto.nombre, producto.precio, producto.imagen)
-// //         let nuevoProducto = JSON.stringify(new Producto(producto.id, producto.descripcion, producto.nombre, producto.precio, producto.imagen))
-// //         // console.log(`nuevoProducto ${ JSON.stringify(nuevoProducto)}`)
-// //         console.log(`nuevoProducto ${nuevoProducto}`)
-// //         mercaderia.push(nuevoProducto)
-// //         // mercaderia.push(JSON.stringify(nuevoProducto))
-// //     }
-// //     console.log(`Antes de setItem mercaderia`)
-// //     localStorage.setItem("mercaderia", JSON.stringify(mercaderia))
-// //     console.log(`Despues de SetItem mercaderia`)
-
-// // });    
-// // }    
