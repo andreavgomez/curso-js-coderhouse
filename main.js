@@ -57,10 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   mostrarCatalogo(mercaderia);
 
-  //////////////////////////////////
-  // // Vincular el evento al hacer clic en el ícono de conexión
-  // botonConexion.addEventListener("click", mostrarModalConexion);
-
   // Evento para mostrar el modal de conexion al hacer clic en el botón
   botonConexion.addEventListener("click", () => {
     mostrarModalConexion();
@@ -108,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   });
-  //////////////////////////////////  
 
 });
 
@@ -117,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
 ///////////
 
 ////////////////////////////////////////////////
-
 // Habilitar opciones para usuario admin
 function habilitarOpcionesAdmin() {
   // Habilitar la opción "Cargar Nuevo Producto" en el select
@@ -179,7 +173,7 @@ function agregarAlCarrito(producto) {
       producto.imagen
     );
     productosEnCarrito.push(productoNuevo);
-    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));    
+    localStorage.setItem("carrito", JSON.stringify(productosEnCarrito));
     console.log(`El Producto ${producto.nombre} se ha agregado con éxito.`);
     verificarBotonFinalizarCompra(); // Verificar el botón cada vez que se agrega un producto
     //Sweetalert 
@@ -393,16 +387,16 @@ function buscarInfo(buscado, array) {
     (coincidencia.innerHTML = "", mostrarCatalogo(busqueda))
 }
 
-  // Función para verificar y mostrar u ocultar el botón "Finalizar Compra"
-  function verificarBotonFinalizarCompra() {
-    const botonFinalizarCompra = document.getElementById("botonFinalizarCompra");
-   
-    if (productosEnCarrito.length === 0) {
-      botonFinalizarCompra.style.display = "none"; // Ocultar el botón si el carrito está vacío
-    } else {
-      botonFinalizarCompra.style.display = "block"; // Mostrar el botón si el carrito no está vacío
-    }
+// Función para verificar y mostrar u ocultar el botón "Finalizar Compra"
+function verificarBotonFinalizarCompra() {
+  const botonFinalizarCompra = document.getElementById("botonFinalizarCompra");
+
+  if (productosEnCarrito.length === 0) {
+    botonFinalizarCompra.style.display = "none"; // Ocultar el botón si el carrito está vacío
+  } else {
+    botonFinalizarCompra.style.display = "block"; // Mostrar el botón si el carrito no está vacío
   }
+}
 
 function finalizarCompra(array) {
   //Sweetalert 
@@ -435,11 +429,9 @@ function finalizarCompra(array) {
   })
 }
 
-
 ///////////
 //EVENTOS:
 //////////
-
 agregarProductoBtn.addEventListener("click", function (event) {
   //Permite que no se actualice al ejecutar el evento
   event.preventDefault()
